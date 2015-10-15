@@ -1,45 +1,73 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<script src="js/angular.min.js"></script>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>My AngularJS App</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">-->
+  <!--<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">-->
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <!--<script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>-->
+
+  <script src="app.js"></script>
+  <!--<script src="view1/view1.js"></script>-->
+  <!--<script src="view2/view2.js"></script>-->
+  <!--<script src="components/version/version.js"></script>-->
+  <!--<script src="components/version/version-directive.js"></script>-->
+  <!--<script src="components/version/interpolate-filter.js"></script>-->
+  <!--<script src="js/bootstrap.min.js"></script>-->
+  <!--<script src="js/ui-bootstrap-tpls.min.js"></script>-->
 </head>
-<body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
+<body ng-app="myApp">
+  <!--<ul class="menu">-->
+    <!--<li><a href="#/view1">view1</a></li>-->
+    <!--<li><a href="#/view2">view2</a></li>-->
+  <!--</ul>-->
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <div ng-view></div>
+  <div ng-controller="MainController">
+    <div class="col-md-6 col-md-offset-3">
+      <h2>Login</h2>
+      <!--<div ng-show="vm.error" class="alert alert-danger">{{vm.error}}</div>-->
 
-  <div>Angular seed app: v<span app-version></span></div>
+      <!--{{scopeTest}}-->
+      <!--<input type="text" name="test" class="form-control" ng-model="scopeTest" required />-->
+
+      <form name="form" ng-submit="login()" role="form">
+
+        <div class="form-group" ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" class="form-control" ng-model="user.name" required />
+          <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" class="form-control" ng-model="user.password" required />
+          <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary">Login</button>
+          <!--<img ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />-->
+        </div>
+
+      </form>
+    </div>
+  </div>
+
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="app.js"></script>
-  <script src="view1/view1.js"></script>
-  <script src="view2/view2.js"></script>
-  <script src="components/version/version.js"></script>
-  <script src="components/version/version-directive.js"></script>
-  <script src="components/version/interpolate-filter.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <!--<script src="bower_components/angular/angular.js"></script>-->
+  <!--<script src="bower_components/angular-route/angular-route.js"></script>-->
+
 </body>
 </html>

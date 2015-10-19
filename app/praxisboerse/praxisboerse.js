@@ -10,7 +10,7 @@ var praxisboerse = angular.module('Praxisboerse', []);
  * Noch einfacher klappt der Zugriff auf eine REST-Schnittstelle
  * in vielen Faellen mit dem Modul ngResource.
  */
-praxisboerse.factory('PraxisboerseService', [ '$http', function($http) {
+praxisboerse.factory('PraxisboerseService', ['$http', function($http) {
     var server = {};
 
     /**
@@ -38,25 +38,31 @@ praxisboerse.factory('PraxisboerseService', [ '$http', function($http) {
 praxisboerse.controller('PraxisboerseController', ['$scope', 'PraxisboerseService', function($scope, PraxisboerseService) {
 
     /**
-     * Essen mit eingestelltem Datum erneut abholen.
+     * Essen mit einstelltem Datum erneut abholen.
      */
-    $scope.refresh = function() {
-        PraxisboerseService.getCredent($scope.url).then(function(response) {
+    PraxisboerseService.checkCredentials = function(username, password) {
+        var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
+        var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+        PraxisboerseService.getCredent(urlToCheck).then(function(response) {
+            console.log("response: " + response.data);
             $scope.credent = response.data;
         }, function(error) {
             console.log('No credent:' + error);
         });
+        //$scope.$apply();
     };
 
-    /**
-     * Empfang von Nachrichten eines Vater-Controllers.
-     */
-    $scope.$on('refreshPraxisboerse', function(event) {$scope.refresh();});
+    ///**
+    // * Empfang von Nachrichten eines Vater-Controllers.
+    // */
+    //$scope.$on('refreshPraxisboerse', function(event) {
+    //    $scope.checkCredentials();
+    //});
 
     /**
      * Initial: Essen abholen.
      */
-    $scope.refresh();
+    //$scope.refresh();
 }]);
 
 praxisboerse.directive('praxisboerseView', function() {

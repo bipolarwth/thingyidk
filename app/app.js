@@ -10,14 +10,14 @@ mainApp.config(function($httpProvider) {
   $httpProvider.defaults.withCredentials = true;
 });
 
-mainApp.controller('MainController', ['$base64', '$scope', 'PraxisboerseService', function($base64, $scope,PraxisboerseService) {
+mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'PraxisboerseService', function($base64, $scope, $rootScope, PraxisboerseService) {
 
   //$scope.scopeTest = "scopeTest";
 
   $scope.user = [];
   $scope.user.name = "username here";
   $scope.user.password = "password here";
-  $scope.loggedIn = false;
+  $rootScope.loggedIn = false;
 
   $scope.login = function() {
     // Check credentials

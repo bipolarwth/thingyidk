@@ -36,19 +36,19 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', function($http
 /**
  * Controller fuer Ausgabe der Mahlzeiten.
  */
-praxisboerse.controller('PraxisboerseController', ['$scope', 'PraxisboerseService', function($scope, PraxisboerseService) {
+praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
 
     /**
      * Essen mit eingestelltem Datum erneut abholen.
      */
     PraxisboerseService.checkCredentials = function(username, password) {
-        var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
+        //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
 
         PraxisboerseService.getCredent($scope.url, username, password).then(function(response) {
             console.log("response: " + response.data);
             $scope.credent = response.data;
-            $scope.loggedIn = true;
+            $rootScope.loggedIn = true;
         }, function(error) {
             console.log('No credent:' + error);
             $scope.credent = '' + error;

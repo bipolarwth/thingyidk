@@ -1,5 +1,35 @@
 <div ng-controller="PraxisboerseController">
-    <h1>Valid Credentials:</h1>
-    <h1 ng-bind="credent.totalHits"></h1>
-    loggedIn: <label ng-bind="loggedIn"></label><br>
+    <!--<h1>Debug:</h1>-->
+    <!--loggedIn: <label ng-bind="loggedIn"></label><br>-->
+    <!--Joboffers: <h1 ng-bind="offers.totalHits"></h1>-->
+
+    <div style="margin-left: 5px; margin-right: 5px;">
+        <!--<h2>Angebotstyp: </h2> <label ng-bind="offers.offerTypes.name"></label>-->
+
+        <h2>Angebotstyp auswaehlen: </h2>
+        <select name="offerTypeSelect" ng-model="selectedOfferType" ng-change="updateSelectedOfferType()">
+            <option ng-repeat="offerType in offers" ng-selected="offerType.shortname" value="{{offerType.shortname}}">{{offerType.name}}</option>
+        </select>
+        <br>
+        <!--<label ng-bind="offers.totalHits"></label>-->
+
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+                <!--<th style="width: 75%">-->
+                <th>Beschreibung</th>
+                <!--<th>Firma</th>-->
+                <th>Enddatum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="offer in offers.offers">
+                <td ng-bind="offer.shortDescription"></td>
+                <!--<td ng-bind="offer.companies"></td>-->
+                <td style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>

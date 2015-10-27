@@ -47,11 +47,11 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
 
         PraxisboerseService.getCredent($scope.url, username, password).then(function(response) {
             console.log("response: " + response.data);
-            $scope.credent = response.data;
+            $scope.offers = response.data;
             $rootScope.loggedIn = true;
         }, function(error) {
             console.log('No credent:' + error);
-            $scope.credent = '' + error;
+            $scope.offers = '' + error;
         });
     };
 
@@ -61,6 +61,10 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.$on('refreshPraxisboerse', function(event) {
         $scope.checkCredentials();
     });
+
+    $scope.updateSelectedOfferType = function() {
+        console.log($scope.selectedOfferType);
+    };
 
     /**
      * Initial: Essen abholen.

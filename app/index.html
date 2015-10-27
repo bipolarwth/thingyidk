@@ -21,13 +21,14 @@
 
 <div ng-controller="MainController">
   <div class="col-md-6 col-md-offset-3">
-    <h2>Login</h2>
     <!--<div ng-show="vm.error" class="alert alert-danger">{{vm.error}}</div>-->
 
     <!--{{scopeTest}}-->
     <!--<input type="text" name="test" class="form-control" ng-model="scopeTest" required />-->
 
     <form name="form" ng-hide="loggedIn" ng-submit="login()" role="form">
+
+      <h2>Login</h2>
 
       <div class="form-group" ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
         <label for="username">Username</label>
@@ -47,9 +48,7 @@
       </div>
     </form>
 
-    <label ng-bind="loggedIn"></label><br>
-
-    <praxisboerse-view url="https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/joboffer/offers/internship/0/-1"></praxisboerse-view>
+    <praxisboerse-view ng-show="loggedIn" url="https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/joboffer/offertypes/all"></praxisboerse-view>
 
   </div>
 

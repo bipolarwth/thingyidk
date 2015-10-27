@@ -1,9 +1,16 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var mainApp = angular.module('MainApp', ['Praxisboerse', 'ui.bootstrap']);
+var mainApp = angular.module('MainApp', ['Praxisboerse', 'Canteen', 'ui.bootstrap', 'base64']);
 
-mainApp.controller('MainController', ['$scope', 'PraxisboerseService', function($scope, PraxisboerseService) {
+mainApp.config(function($httpProvider) {
+// Cross-Domain-Aufrufe erlauben
+  $httpProvider.defaults.useXDomain = true;
+// Das Mitsenden von Authentifizierungsinformationen erlauben
+  $httpProvider.defaults.withCredentials = true;
+});
+
+mainApp.controller('MainController', ['$base64', '$scope', 'PraxisboerseService', function($base64, $scope, PraxisboerseService) {
 
   //$scope.scopeTest = "scopeTest";
 
@@ -15,10 +22,11 @@ mainApp.controller('MainController', ['$scope', 'PraxisboerseService', function(
     console.log("login with " + $scope.user.name + " and " + $scope.user.password);
 
     // Check credentials
-    var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/";
-    var urlToCheck = hskaCredentialCheckUrl + $scope.user.name + "/" + $scope.user.password;
+    //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/";
+    //var urlToCheck = hskaCredentialCheckUrl + $scope.user.name + "/" + $scope.user.password;
 
     PraxisboerseService.checkCredentials($scope.user.name, $scope.user.password);
+    //$scope.$broadcast('refreshPraxisboerse');
   };
 
   $scope.refresh = function() {

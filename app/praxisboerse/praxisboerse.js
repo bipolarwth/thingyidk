@@ -44,14 +44,15 @@ praxisboerse.controller('PraxisboerseController', ['$scope', 'PraxisboerseServic
     PraxisboerseService.checkCredentials = function(username, password) {
         var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+
         PraxisboerseService.getCredent($scope.url, username, password).then(function(response) {
             console.log("response: " + response.data);
             $scope.credent = response.data;
+            $scope.loggedIn = true;
         }, function(error) {
             console.log('No credent:' + error);
-            $scope.credent = error;
+            $scope.credent = '' + error;
         });
-        //$scope.$apply();
     };
 
     ///**

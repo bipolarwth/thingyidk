@@ -10,23 +10,22 @@ mainApp.config(function($httpProvider) {
   $httpProvider.defaults.withCredentials = true;
 });
 
-mainApp.controller('MainController', ['$base64', '$scope', 'PraxisboerseService', function($base64, $scope, PraxisboerseService) {
+mainApp.controller('MainController', ['$base64', '$scope', 'PraxisboerseService', function($base64, $scope,PraxisboerseService) {
 
   //$scope.scopeTest = "scopeTest";
 
   $scope.user = [];
   $scope.user.name = "username here";
   $scope.user.password = "password here";
+  $scope.loggedIn = false;
 
   $scope.login = function() {
-    console.log("login with " + $scope.user.name + " and " + $scope.user.password);
-
     // Check credentials
     //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/";
     //var urlToCheck = hskaCredentialCheckUrl + $scope.user.name + "/" + $scope.user.password;
 
     PraxisboerseService.checkCredentials($scope.user.name, $scope.user.password);
-    //$scope.$broadcast('refreshPraxisboerse');
+
   };
 
   $scope.refresh = function() {

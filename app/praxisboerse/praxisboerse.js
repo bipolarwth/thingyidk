@@ -38,6 +38,7 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
  */
 praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
 
+    $scope.textfilter = "";
 
     /**
      * Initial die Angebotstypen vom Server abholen
@@ -48,12 +49,12 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         $scope.mobileDevice = $rootScope.mobileDevice;
 
         PraxisboerseService.getData($scope.url).then(function(response) {
-            console.log("response: " + response.data);
+            //console.log("response: " + response.data);
             $scope.selectedOfferType = "preselect";
             $scope.offerTypes = response.data;
             $rootScope.loggedIn = true;
         }, function(error) {
-            console.log('No credent:' + error);
+            console.log('error: ' + error);
             $scope.offerTypes = '' + error;
         });
     };
@@ -66,13 +67,27 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
 
+        console.log("Request: " + url);
+
         PraxisboerseService.getData(url).then(function(response) {
-            console.log("response: " + response.data);
+            console.log("totalHits: " + response.data.totalHits);
             $scope.offers = response.data;
         }, function(error) {
-            console.log('No credent:' + error);
+            console.log('error: ' + error);
             $scope.offers = '' + error;
         });
+    };
+
+    /**
+     * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
+     */
+    $scope.applyTextfilter = function(userFilterText) {
+        $scope.textfilter = userFilterText;
+        //console.log("textfilter: " + $scope.textfilter);
+        if($scope.textfilter != "")
+            $scope.textfilter += "/";
+
+        $scope.updateSelectedOfferType();
     };
 
     /**
@@ -96,7 +111,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     //});
 
     $scope.updateSelectedOfferType = function() {
-        console.log($scope.selectedOfferType);
+        //console.log($scope.selectedOfferType);
 
         if($scope.selectedOfferType != "preselect") {
             //if($scope.mobileDevice == false)
@@ -105,7 +120,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             //{
             $scope.offerResultsStart = 0;
             $scope.offerResultsCount = 10;
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             //}
         }
     };

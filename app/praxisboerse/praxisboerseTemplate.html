@@ -5,13 +5,27 @@
 
     <div style="margin-left: 5px; margin-right: 5px;">
 
-        <h2>Praxisb&ouml;rse</h2><br>
-        <h2>Mobile Device:</h2><label ng-bind="mobileDevice"></label>
+        <h2>Praxisb&ouml;rse</h2>
+        <br>
+        <label>Mobile Device:</label>
+        <label ng-bind="mobileDevice"></label>
+
+        <br>
+
         <label>Angebotstyp ausw&auml;hlen: </label>
         <select name="offerTypeSelect" ng-model="selectedOfferType" ng-change="updateSelectedOfferType()">
-            <option ng-repeat="offerType in offerTypes" ng-selected="offerType.shortname" value="{{offerType.shortname}}">{{offerType.name}}</option>
+            <option value="preselect" selected><-- Angebotstyp ausw&auml;hlen --></option>
+            <option ng-repeat="offerType in offerTypes" value="{{offerType.shortname}}">{{offerType.name}}</option>
         </select>
+
         <br>
+
+        <label>Suchfilter: </label>
+        <input type="text" name="textfilter" id="textfilter" ng-model="userFilterText"/>
+        <button ng-click="applyTextfilter(userFilterText)">&Uuml;bernehmen</button>
+
+        <br><br>
+
         <!--<label ng-bind="offers.totalHits"></label>-->
 
         <table class="table table-bordered table-hover table-condensed">

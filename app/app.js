@@ -12,23 +12,19 @@ mainApp.config(function($httpProvider) {
 
 mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'PraxisboerseService', function($base64, $scope, $rootScope, PraxisboerseService) {
 
-  //$scope.scopeTest = "scopeTest";
-
   $scope.user = [];
-  $scope.user.name = "plvi1012";
-  $scope.user.password = "password";
+  $scope.user.name = "username here";
+  $scope.user.password = "password here";
   $rootScope.loggedIn = false;
   $rootScope.restURL = "https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/";
 
+  /**
+   * Aufgerufene Funktion beim Klick auf den Login Button. Codiert die Anmeldedaten und holt die initialen Angebotstypen ab.
+   */
   $scope.login = function() {
-    // Check credentials
-    //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/";
-    //var urlToCheck = hskaCredentialCheckUrl + $scope.user.name + "/" + $scope.user.password;
-
     $rootScope.userCredentials = $base64.encode($scope.user.name + ':' + $scope.user.password);
     $scope.mobileCheck();
-    PraxisboerseService.checkCredentials();
-
+    PraxisboerseService.getOfferTypes();
   };
 
   $scope.logout = function() {
@@ -41,9 +37,10 @@ mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'Praxis
     $rootScope.mobileDevice = check;
   }
 
-  $scope.refresh = function() {
-    //$scope.$broadcast('incrementDate');
-    $scope.$broadcast('refreshPraxisboerse');
-  };
+  // Aufruf der Aktualisierungsfunktion im PraxisboerseController
+  //$scope.refresh = function() {
+  //  //$scope.$broadcast('incrementDate');
+  //  $scope.$broadcast('refreshPraxisboerse');
+  //};
 
 }]);

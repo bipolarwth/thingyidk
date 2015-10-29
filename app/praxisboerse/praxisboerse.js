@@ -14,8 +14,8 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
     var server = {};
 
     /**
-     * Abholen der Essen.
-     * @returns Alle Essen, sortiert in Gruppen von Mahlzeiten.
+     * Aufruf an den Server mit Base64 gecodeten Zugangsdaten (userCredentials)
+     * @returns den REST Respone Body
      */
     server.getData = function(url) {
         $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials
@@ -24,7 +24,7 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
 
     /**
      * Die eigentliche Funktion des Dienstes.
-     * @returns Alle Essen, sortiert in Gruppen von Mahlzeiten.
+     * @returns den Server Response
      */
     return {
         getData: function(url) {
@@ -34,21 +34,22 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
 }]);
 
 /**
- * Controller fuer Ausgabe der Mahlzeiten.
+ * Controller fuer die Verwaltung von Angebotstypen und Angeboten
  */
 praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
 
 
     /**
-     * Essen mit eingestelltem Datum erneut abholen.
+     * Initial die Angebotstypen vom Server abholen
      */
-    PraxisboerseService.checkCredentials = function() {
+    PraxisboerseService.getOfferTypes = function() {
         //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
         $scope.mobileDevice = $rootScope.mobileDevice;
 
         PraxisboerseService.getData($scope.url).then(function(response) {
             console.log("response: " + response.data);
+            $scope.selectedOfferType = "preselect";
             $scope.offerTypes = response.data;
             $rootScope.loggedIn = true;
         }, function(error) {
@@ -57,6 +58,10 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         });
     };
 
+    /**
+     * Die Angebote vom Server mit der angegebenen URL per REST abholen
+     * @param url
+     */
     PraxisboerseService.getOffers = function(url) {
         //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
@@ -71,21 +76,19 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     };
 
     ///**
-    // * Empfang von Nachrichten eines Vater-Controllers.
+    // * Aktualisierung der Daten
     // */
-    $scope.$on('refreshPraxisboerse', function(event) {
-        $scope.checkCredentials();
-    });
+    //$scope.$on('refreshPraxisboerse', function(event) {
+    //    $scope.getOffers();
+    //});
 
     $scope.updateSelectedOfferType = function() {
         console.log($scope.selectedOfferType);
-        PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
+        if($scope.selectedOfferType != "preselect") {
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
+        }
     };
 
-    /**
-     * Initial: Essen abholen.
-     */
-    //$scope.refresh();
 }]);
 
 praxisboerse.directive('praxisboerseView', function() {

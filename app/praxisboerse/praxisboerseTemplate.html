@@ -5,7 +5,7 @@
 
     <div style="margin-left: 5px; margin-right: 5px;">
         <!--<h2>Angebotstyp: </h2> <label ng-bind="offers.offerTypes.name"></label>-->
-
+        <h2>Mobile Device:</h2><label ng-bind="mobileDevice"></label>
         <h2>Angebotstyp auswaehlen: </h2>
         <select name="offerTypeSelect" ng-model="selectedOfferType" ng-change="updateSelectedOfferType()">
             <option ng-repeat="offerType in offerTypes" ng-selected="offerType.shortname" value="{{offerType.shortname}}">{{offerType.name}}</option>

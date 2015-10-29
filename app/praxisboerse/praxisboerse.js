@@ -38,12 +38,14 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
  */
 praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
 
+
     /**
      * Essen mit eingestelltem Datum erneut abholen.
      */
     PraxisboerseService.checkCredentials = function() {
         //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+        $scope.mobileDevice = $rootScope.mobileDevice;
 
         PraxisboerseService.getData($scope.url).then(function(response) {
             console.log("response: " + response.data);

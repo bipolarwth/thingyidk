@@ -38,6 +38,8 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
  */
 praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
 
+    $scope.offerResultsStart = 0;
+    $scope.offerResultsCount = 10;
     $scope.textfilter = "";
 
     /**
@@ -93,15 +95,27 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     /**
      * Datum um einen tag erhoehen, Essen erneut abholen.
      */
-    $scope.incrementDate = function() {
+    $scope.incrementOfferResultsStart = function() {
         $scope.offerResultsStart = $scope.offerResultsStart + $scope.offerResultsCount +1 ;
-        PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+        //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+        $scope.updateSelectedOfferType();
+
+    };
+
+    /**
+     * Datum um einen tag erhoehen, Essen erneut abholen.
+     */
+    $scope.decrementOfferResultsStart = function() {
+        $scope.offerResultsStart = $scope.offerResultsStart - $scope.offerResultsCount -1 ;
+        //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+        $scope.updateSelectedOfferType();
     };
 
     /**
      * Empfang von Nachrichten eines Vater-Controllers.
      */
-    $scope.$on('incrementDate', function(event) {$scope.incrementDate();});
+    //$scope.$on('incrementOfferResultsStart', function(event) {$scope.incrementOfferResultsStart();});
+    //$scope.$on('decrementOfferResultsStart', function(event) {$scope.decrementOfferResultsStart();});
 
     ///**
     // * Aktualisierung der Daten
@@ -118,9 +132,8 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
             //else
             //{
-            $scope.offerResultsStart = 0;
-            $scope.offerResultsCount = 10;
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             //}
         }
     };

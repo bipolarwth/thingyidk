@@ -98,7 +98,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.incrementOfferResultsStart = function() {
         $scope.offerResultsStart = $scope.offerResultsStart + $scope.offerResultsCount +1 ;
         //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
-        $scope.updateSelectedOfferType();
+        $scope.updateResults();
 
     };
 
@@ -108,7 +108,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.decrementOfferResultsStart = function() {
         $scope.offerResultsStart = $scope.offerResultsStart - $scope.offerResultsCount -1 ;
         //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
-        $scope.updateSelectedOfferType();
+        $scope.updateResults();
     };
 
     /**
@@ -125,6 +125,11 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     //});
 
     $scope.updateSelectedOfferType = function() {
+        $scope.offerResultsStart = 0;
+        $scope.updateResults();
+    }
+
+    $scope.updateResults = function() {
         //console.log($scope.selectedOfferType);
 
         if($scope.selectedOfferType != "preselect") {
@@ -133,7 +138,6 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             //else
             //{
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             //}
         }
     };

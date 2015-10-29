@@ -46,7 +46,7 @@
             </tbody>
         </table>
 
-        <button class="btn btn-default" ng-click="decrementOfferResultsStart()">&lt;&lt; Previous</button>
+        <button class="btn btn-default" ng-hide="offerResultsStart == 0" ng-click="decrementOfferResultsStart()">&lt;&lt; Previous</button>
         <label ng-bind="offers.offers.length"></label>
         <label ng-bind="offers.totalHits"></label>
         <label ng-bind="offers.totalHits - offerResultsStart"></label>

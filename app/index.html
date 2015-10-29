@@ -48,6 +48,12 @@
       </div>
     </form>
 
+    <form name="form" ng-show="loggedIn" ng-submit="logout()" role="form">
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Logout</button>
+      </div>
+    </form>
+
     <praxisboerse-view ng-show="loggedIn" url="https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/joboffer/offertypes/all"></praxisboerse-view>
 
   </div>

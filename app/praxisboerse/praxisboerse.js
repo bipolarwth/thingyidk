@@ -75,6 +75,19 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         });
     };
 
+    /**
+     * Datum um einen tag erhoehen, Essen erneut abholen.
+     */
+    $scope.incrementDate = function() {
+        $scope.offerResultsStart = $scope.offerResultsStart + $scope.offerResultsCount +1 ;
+        PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+    };
+
+    /**
+     * Empfang von Nachrichten eines Vater-Controllers.
+     */
+    $scope.$on('incrementDate', function(event) {$scope.incrementDate();});
+
     ///**
     // * Aktualisierung der Daten
     // */
@@ -84,8 +97,16 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
 
     $scope.updateSelectedOfferType = function() {
         console.log($scope.selectedOfferType);
+
         if($scope.selectedOfferType != "preselect") {
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
+            //if($scope.mobileDevice == false)
+            //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
+            //else
+            //{
+            $scope.offerResultsStart = 0;
+            $scope.offerResultsCount = 10;
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            //}
         }
     };
 

@@ -138,6 +138,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             //else
             //{
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             //}
         }
     };

@@ -8,7 +8,7 @@
 
         <h2>Angebotstyp auswaehlen: </h2>
         <select name="offerTypeSelect" ng-model="selectedOfferType" ng-change="updateSelectedOfferType()">
-            <option ng-repeat="offerType in offers" ng-selected="offerType.shortname" value="{{offerType.shortname}}">{{offerType.name}}</option>
+            <option ng-repeat="offerType in offerTypes" ng-selected="offerType.shortname" value="{{offerType.shortname}}">{{offerType.name}}</option>
         </select>
         <br>
         <!--<label ng-bind="offers.totalHits"></label>-->

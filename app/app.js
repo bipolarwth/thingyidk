@@ -18,13 +18,15 @@ mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'Praxis
   $scope.user.name = "username here";
   $scope.user.password = "password here";
   $rootScope.loggedIn = false;
+  $rootScope.restURL = "https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/";
 
   $scope.login = function() {
     // Check credentials
     //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/";
     //var urlToCheck = hskaCredentialCheckUrl + $scope.user.name + "/" + $scope.user.password;
 
-    PraxisboerseService.checkCredentials($scope.user.name, $scope.user.password);
+    $rootScope.userCredentials = $base64.encode($scope.user.name + ':' + $scope.user.password);
+    PraxisboerseService.checkCredentials();
 
   };
 

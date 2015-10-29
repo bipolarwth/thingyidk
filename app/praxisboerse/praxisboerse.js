@@ -10,15 +10,15 @@ var praxisboerse = angular.module('Praxisboerse', ['base64']);
  * Noch einfacher klappt der Zugriff auf eine REST-Schnittstelle
  * in vielen Faellen mit dem Modul ngResource.
  */
-praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', function($http, $base64) {
+praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', function($http, $base64, $rootScope) {
     var server = {};
 
     /**
      * Abholen der Essen.
      * @returns Alle Essen, sortiert in Gruppen von Mahlzeiten.
      */
-    server.getCredent = function(url, username, password) {
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + password)
+    server.getData = function(url) {
+        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials
         return $http.get(url);
     };
 
@@ -27,8 +27,8 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', function($http
      * @returns Alle Essen, sortiert in Gruppen von Mahlzeiten.
      */
     return {
-        getCredent: function(url, username, password) {
-            return server.getCredent(url, username, password);
+        getData: function(url) {
+            return server.getData(url);
         }
     }
 }]);
@@ -41,14 +41,27 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     /**
      * Essen mit eingestelltem Datum erneut abholen.
      */
-    PraxisboerseService.checkCredentials = function(username, password) {
+    PraxisboerseService.checkCredentials = function() {
         //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
         //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
 
-        PraxisboerseService.getCredent($scope.url, username, password).then(function(response) {
+        PraxisboerseService.getData($scope.url).then(function(response) {
+            console.log("response: " + response.data);
+            $scope.offerTypes = response.data;
+            $rootScope.loggedIn = true;
+        }, function(error) {
+            console.log('No credent:' + error);
+            $scope.offerTypes = '' + error;
+        });
+    };
+
+    PraxisboerseService.getOffers = function(url) {
+        //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
+        //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+
+        PraxisboerseService.getData(url).then(function(response) {
             console.log("response: " + response.data);
             $scope.offers = response.data;
-            $rootScope.loggedIn = true;
         }, function(error) {
             console.log('No credent:' + error);
             $scope.offers = '' + error;
@@ -64,6 +77,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
 
     $scope.updateSelectedOfferType = function() {
         console.log($scope.selectedOfferType);
+        PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
     };
 
     /**

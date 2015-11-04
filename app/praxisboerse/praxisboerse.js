@@ -14,12 +14,30 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
     var server = {};
 
     /**
-     * Aufruf an den Server mit Base64 gecodeten Zugangsdaten (userCredentials)
+     * Aufruf an den Server mit Base64 encodierten Zugangsdaten (userCredentials)
      * @returns den REST Respone Body
      */
     server.getData = function(url) {
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials
+        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials;
         return $http.get(url);
+    };
+
+    /**
+     * Aufruf an den Server mit Base64 encodierten Zugangsdaten (userCredentials)
+     * @returns den REST Respone Body
+     */
+    server.postData = function(url, offerId) {
+        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials;
+        return $http.post(url, offerId);
+    };
+
+    /**
+     * Aufruf an den Server mit Base64 encodierten Zugangsdaten (userCredentials)
+     * @returns den REST Respone Body
+     */
+    server.deleteData = function(url) {
+        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials;
+        return $http.delete(url);
     };
 
     /**
@@ -29,6 +47,12 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
     return {
         getData: function(url) {
             return server.getData(url);
+        },
+        postData: function(url, offerId) {
+            return server.postData(url, offerId);
+        },
+        deleteData: function(url) {
+            return server.deleteData(url);
         }
     }
 }]);
@@ -41,6 +65,64 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.offerResultsStart = 0;
     $scope.offerResultsCount = 10;
     $scope.textfilter = "";
+    $scope.checkboxModel = {
+        checked : false
+    };
+
+    var selected = $scope.selected = [];
+
+    var updateSelected = function(action, id) {
+        if (action === 'add' && $scope.selected.indexOf(id) === -1) {
+            $scope.selected.push(id);
+            PraxisboerseService.putOfferOnNotepad(id);
+        }
+        if (action === 'remove' && $scope.selected.indexOf(id) !== -1) {
+            $scope.selected.splice($scope.selected.indexOf(id), 1);
+            PraxisboerseService.deleteOfferFromNotepad(id);
+        }
+    };
+
+    $scope.updateSelection = function($event, id) {
+        var checkbox = $event.target;
+        var action = (checkbox.checked ? 'add' : 'remove');
+        console.log("selectedOfferId: " + id);
+        updateSelected(action, id);
+    };
+
+    $scope.isSelected = function(id) {
+        return $scope.selected.indexOf(id) >= 0;
+    };
+
+    /**
+     * Angebote auf den Merkzettel speichern
+     * @param url
+     */
+    PraxisboerseService.putOfferOnNotepad = function(offerId) {
+        var url = $rootScope.restURL + "joboffer/notepad/offer";
+        console.log("PostUrl: " + url);
+        console.log("OfferId to put on notepad: " + offerId);
+
+        PraxisboerseService.postData(url, offerId).then(function(response) {
+            console.log("ServerResponse: " + response);
+        }, function(error) {
+            console.log('error: ' + error);
+        });
+    };
+
+    /**
+     * Angebote vom Merkzettel löschen
+     * @param url
+     */
+    PraxisboerseService.deleteOfferFromNotepad = function(offerId) {
+        var url = $rootScope.restURL + "joboffer/notepad/offer/" + offerId;
+        console.log("DeleteUrl: " + url);
+
+        PraxisboerseService.deleteData(url).then(function(response) {
+            console.log("ServerResponse: " + response);
+        }, function(error) {
+            console.log('error: ' + error);
+        });
+    };
 
     /**
      * Initial die Angebotstypen vom Server abholen
@@ -74,6 +156,14 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         PraxisboerseService.getData(url).then(function(response) {
             console.log("totalHits: " + response.data.totalHits);
             $scope.offers = response.data;
+
+            if(url.indexOf("notepad") > -1)
+            {
+                angular.forEach($scope.offers.offers, function(value) {
+                    this.push(value.id);
+                }, selected);
+            }
+
         }, function(error) {
             console.log('error: ' + error);
             $scope.offers = '' + error;
@@ -132,7 +222,12 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.updateResults = function() {
         //console.log($scope.selectedOfferType);
 
-        if($scope.selectedOfferType != "preselect") {
+        if($scope.checkboxModel.checked)
+        {
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/0/-1");
+        }
+
+        else if($scope.selectedOfferType != "preselect") {
             //if($scope.mobileDevice == false)
             //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
             //else
@@ -140,6 +235,11 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
             //}
+        }
+
+        if($scope.checkboxModel.checked == false && $scope.selectedOfferType == "preselect")
+        {
+            $scope.offers = '';
         }
     };
 
@@ -152,7 +252,21 @@ praxisboerse.directive('praxisboerseView', function() {
         },
         templateUrl: 'praxisboerse/praxisboerseTemplate.html',
         restrict: 'E',
+        controller: 'PraxisboerseController',
         link: function(scope, element, attrs) {
         }
     };
 });
+
+//praxisboerse.directive('notepadView', function() {
+//    return {
+//        scope: {
+//            url: '@url'
+//        },
+//        templateUrl: 'praxisboerse/notepadTemplate.html',
+//        restrict: 'E',
+//        controller: 'PraxisboerseNotepadController',
+//        link: function(scope, element, attrs) {
+//        }
+//    };
+//});

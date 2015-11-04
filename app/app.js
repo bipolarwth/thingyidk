@@ -13,8 +13,8 @@ mainApp.config(function($httpProvider) {
 mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'PraxisboerseService', function($base64, $scope, $rootScope, PraxisboerseService) {
 
   $scope.user = [];
-  $scope.user.name = "username here";
-  $scope.user.password = "password here";
+  $scope.user.name = "plvi1012";
+  $scope.user.password = "pw";
   $rootScope.loggedIn = false;
   $rootScope.restURL = "https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/";
 

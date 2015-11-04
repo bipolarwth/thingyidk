@@ -24,6 +24,13 @@
         <input type="text" name="textfilter" id="textfilter" ng-model="userFilterText"/>
         <button ng-click="applyTextfilter(userFilterText)">&Uuml;bernehmen</button>
 
+        <br>
+
+        <label>Merkzettel anzeigen:
+            <input type="checkbox" ng-model="checkboxModel.checked" ng-change="updateSelectedOfferType()">
+        </label>
+        <br/>
+
         <br><br>
 
         <!--<label ng-bind="offers.totalHits"></label>-->
@@ -31,6 +38,7 @@
         <table class="table table-bordered table-hover table-condensed">
             <thead>
             <tr>
+                <th>Merken</th>
                 <!--<th style="width: 75%">-->
                 <th>Beschreibung</th>
                 <!--<th>Firma</th>-->
@@ -39,6 +47,10 @@
             </thead>
             <tbody>
             <tr ng-repeat="offer in offers.offers">
+                <!--<td> <input type="checkbox" checklist-model="offer" checklist-value="offer.id" ng-change="putOnNotepad(offer.id)"></td>-->
+                <td> <input type="checkbox" name="selected"
+                            ng-checked="isSelected(offer.id)"
+                            ng-click="updateSelection($event, offer.id)"></td>
                 <td ng-bind="offer.shortDescription"></td>
                 <!--<td ng-bind="offer.companies"></td>-->
                 <td style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>

@@ -1,0 +1,56 @@
+<!--<div ng-controller="PraxisboerseNotepadController">-->
+    <!--<h1>Debug:</h1>-->
+    <!--loggedIn: <label ng-bind="loggedIn"></label><br>-->
+    <!--Joboffers: <h1 ng-bind="offers.totalHits"></h1>-->
+
+    <!--<div style="margin-left: 5px; margin-right: 5px;">-->
+
+        <!--<h2>Praxisb&ouml;rse Merkzettel</h2>-->
+        <!--<br>-->
+        <!--<label>Mobile Device:</label>-->
+        <!--<label ng-bind="mobileDevice"></label>-->
+
+        <!--<br>-->
+
+        <!--<label>Angebotstyp ausw&auml;hlen: </label>-->
+        <!--<select name="offerTypeSelect" ng-model="selectedOfferType" ng-change="updateSelectedOfferType()">-->
+            <!--<option value="preselect" selected><&#45;&#45; Angebotstyp ausw&auml;hlen &ndash;&gt;</option>-->
+            <!--<option ng-repeat="offerType in offerTypes" value="{{offerType.shortname}}">{{offerType.name}}</option>-->
+        <!--</select>-->
+
+        <!--<br>-->
+
+        <!--<label>Suchfilter: </label>-->
+        <!--<input type="text" name="textfilter" id="textfilter" ng-model="userFilterText"/>-->
+        <!--<button ng-click="applyTextfilter(userFilterText)">&Uuml;bernehmen</button>-->
+
+        <!--<br><br>-->
+
+        <!--<label ng-bind="notepad.totalHits"></label>-->
+
+        <!--<table class="table table-bordered table-hover table-condensed">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--&lt;!&ndash;<th style="width: 75%">&ndash;&gt;-->
+                <!--<th>Beschreibung</th>-->
+                <!--&lt;!&ndash;<th>Firma</th>&ndash;&gt;-->
+                <!--<th>Enddatum</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr ng-repeat="offer in offers.offers">-->
+                <!--<td ng-bind="offer.shortDescription"></td>-->
+                <!--&lt;!&ndash;<td ng-bind="offer.companies"></td>&ndash;&gt;-->
+                <!--<td style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+        <!--<button class="btn btn-default" ng-hide="offerResultsStart == 0" ng-click="decrementOfferResultsStart()">&lt;&lt; Previous</button>-->
+        <!--<label ng-bind="offers.offers.length"></label>-->
+        <!--<label ng-bind="offers.totalHits"></label>-->
+        <!--<label ng-bind="offers.totalHits - offerResultsStart"></label>-->
+        <!--<button class="btn btn-default" ng-hide="(offers.totalHits - offerResultsStart) <= offerResultsCount" ng-click="incrementOfferResultsStart()">Next &gt;&gt;</button>-->
+    <!--</div>-->
+
+<!--</div>-->

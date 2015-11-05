@@ -66,7 +66,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.offerResultsCount = 10;
     $scope.textfilter = "";
     $scope.checkboxModel = {
-        checked : false
+        checked : true
     };
 
     var selected = $scope.selected = [];
@@ -141,6 +141,8 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             console.log('error: ' + error);
             $scope.offerTypes = '' + error;
         });
+
+        $scope.updateResults();
     };
 
     /**
@@ -222,7 +224,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.updateResults = function() {
         //console.log($scope.selectedOfferType);
 
-        if($scope.checkboxModel.checked)
+        if($scope.checkboxModel.checked && (angular.isUndefined($scope.selectedOfferType) ||  $scope.selectedOfferType == "preselect"))
         {
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/0/-1");
         }
@@ -232,8 +234,17 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
             //PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/0/-1");
             //else
             //{
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+
+            if($scope.checkboxModel.checked)
+            {
+                PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            }
+            else
+            {
+                PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.textfilter + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+                PraxisboerseService.getOffers($rootScope.restURL + "joboffer/offers/" + $scope.selectedOfferType + "/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
+            }
+
             //}
         }
 

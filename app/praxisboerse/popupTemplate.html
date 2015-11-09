@@ -1,0 +1,25 @@
+<div class="modal">
+    <script type="text/ng-template" id="popupTemplate.html">
+        <div class="model-dialog" role="document">
+            <div class="modal-header">
+                <h3 class="modal-title">{{selectedOffer.shortDescription}}</h3>
+            </div>
+            <div class="modal-body">
+
+                Hinzugefügt: {{selectedOffer.dateAdded}}
+                <br>
+                Gültig bis: {{selectedOffer.validDate}}
+                <br>
+                Ort: {{selectedOffer.usageSite}}
+
+                <h4>Beschreibung:</h4>
+                {{selectedOffer.description}}
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
+            </div>
+        </div>
+    </script>
+</div>

@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var mainApp = angular.module('MainApp', ['Praxisboerse', 'Canteen', 'ui.bootstrap', 'base64']);
+var mainApp = angular.module('MainApp', ['Praxisboerse', 'base64']);
 
 mainApp.config(function($httpProvider) {
 // Cross-Domain-Aufrufe erlauben
@@ -13,8 +13,8 @@ mainApp.config(function($httpProvider) {
 mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'PraxisboerseService', function($base64, $scope, $rootScope, PraxisboerseService) {
 
   $scope.user = [];
-  $scope.user.name = "plvi1012";
-  $scope.user.password = "pw";
+  $scope.user.name = "bual1022";
+  $scope.user.password = "";
   $rootScope.loggedIn = false;
   $rootScope.restURL = "https://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/";
 

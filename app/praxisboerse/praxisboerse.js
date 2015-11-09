@@ -3,7 +3,7 @@
 /**
  * Das Modul fuer den Zugriff auf die Praxisboerse.
  */
-var praxisboerse = angular.module('Praxisboerse', ['base64']);
+var praxisboerse = angular.module('Praxisboerse', ['base64', 'ngAnimate', 'ui.bootstrap']);
 
 /**
  * Kapselung des Zugriffs in Form eines Dienstes.
@@ -58,9 +58,10 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
 }]);
 
 /**
- * Controller fuer die Verwaltung von Angebotstypen und Angeboten
+ * Controller fuer die Verwaltung von Angebotstypen und Angeboten.
  */
-praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'PraxisboerseService', function($scope, $rootScope, PraxisboerseService) {
+praxisboerse.controller('PraxisboerseController',
+    ['$scope', '$rootScope', 'PraxisboerseService', '$uibModal', function($scope, $rootScope, PraxisboerseService, $uibModal, $log) {
 
     $scope.offerResultsStart = 0;
     $scope.offerResultsCount = 10;
@@ -172,6 +173,22 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
         });
     };
 
+    $scope.openPopUp = function(selectedOffer) {
+
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'popupTemplate.html',
+            controller: 'PopupInstanceController',
+            size: 'lg',
+            resolve: {
+                // Argumente an den Controller sind ggf. unnoetig
+                selectedOffer: function () {
+                    return selectedOffer;
+                }
+            }
+        });
+    };
+
     /**
      * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
      */
@@ -219,7 +236,7 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
     $scope.updateSelectedOfferType = function() {
         $scope.offerResultsStart = 0;
         $scope.updateResults();
-    }
+    };
 
     $scope.updateResults = function() {
         //console.log($scope.selectedOfferType);
@@ -256,6 +273,21 @@ praxisboerse.controller('PraxisboerseController', ['$scope', '$rootScope', 'Prax
 
 }]);
 
+
+praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'selectedOffer',
+    function($scope, $uibModalInstance, selectedOffer) {
+
+    $scope.selectedOffer = selectedOffer;
+
+    $scope.ok = function () {
+        $uibModalInstance.close();
+    };
+
+    //$scope.cancel = function () {
+    //    $uibModalInstance.dismiss('cancel');
+    //};
+}]);
+
 praxisboerse.directive('praxisboerseView', function() {
     return {
         scope: {
@@ -267,6 +299,14 @@ praxisboerse.directive('praxisboerseView', function() {
         link: function(scope, element, attrs) {
         }
     };
+});
+
+praxisboerse.directive('popupTemplate', function() {
+   return {
+       templateUrl: 'praxisboerse/popupTemplate.html',
+       controller: 'PraxisboerseController',
+       replace: true
+   };
 });
 
 //praxisboerse.directive('notepadView', function() {

@@ -6,14 +6,27 @@
             </div>
             <div class="modal-body">
 
-                Hinzugefügt: {{selectedOffer.dateAdded}}
-                <br>
-                Gültig bis: {{selectedOffer.validDate}}
-                <br>
-                Ort: {{selectedOffer.usageSite}}
+                <table style="width: 1%" class="table table-bordered">
+                    <tr>
+                        <td><strong>Hinzugefügt</strong></td>
+                        <td >{{selectedOffer.dateAdded | date}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gültig bis</strong></td>
+                        <td>{{selectedOffer.validDate | date}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firma</strong></td>
+                        <td>{{getCompanyById(selectedOffer.companyId).companyName}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ort</strong></td>
+                        <td>{{selectedOffer.usageSite}}</td>
+                    </tr>
+                </table>
 
-                <h4>Beschreibung:</h4>
-                {{selectedOffer.description}}
+                <h3>Beschreibung</h3>
+                <p ng-bind="selectedOffer.description"></p>
 
             </div>
             <div class="modal-footer">

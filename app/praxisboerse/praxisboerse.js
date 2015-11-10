@@ -75,7 +75,8 @@ praxisboerse.controller('PraxisboerseController',
         //$scope.offerResultsCount = 10;
     }
 
-
+    $scope.companies = [];
+    $scope.offerTypes = [];
     $scope.textfilter = "";
     $scope.checkboxModel = {
         checked : true
@@ -136,13 +137,24 @@ praxisboerse.controller('PraxisboerseController',
         });
     };
 
-    /**
-     * Initial die Angebotstypen vom Server abholen
-     */
-    PraxisboerseService.getOfferTypes = function() {
-        //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
-        //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
-        $scope.mobileDevice = $rootScope.mobileDevice;
+        /**
+         * Initial die Firmen (zu den companyId's der offers) Daten abholen.
+         */
+        PraxisboerseService.getCompanies = function () {
+
+            PraxisboerseService.getData($rootScope.restURL + 'joboffer/companies/all').then(function (response) {
+                $scope.companies = response.data;
+            });
+
+        };
+
+        /**
+         * Initial die Angebotstypen vom Server abholen
+         */
+        PraxisboerseService.getOfferTypes = function() {
+            //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
+            //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+            $scope.mobileDevice = $rootScope.mobileDevice;
 
         PraxisboerseService.getData($scope.url).then(function(response) {
             //console.log("response: " + response.data);
@@ -184,30 +196,71 @@ praxisboerse.controller('PraxisboerseController',
         });
     };
 
-    $scope.openPopUp = function(selectedOffer) {
+        /**
+         * Durchsucht das companies Array nach der Firma mit der id = companyId. Dies ist mit O(n) derzeit die beste Lösung.
+         * @param companyId ID der Firma dessen Objekt aus dem Array gesucht werden soll.
+         */
+        PraxisboerseService.getCompanyById = function (companyId) {
 
-        var modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'popupTemplate.html',
-            controller: 'PopupInstanceController',
-            size: 'lg',
-            resolve: {
-                // Argumente an den Controller sind ggf. unnoetig
-                selectedOffer: function () {
-                    return selectedOffer;
+            for(var i = 0; i < $scope.companies.length; i++) {
+                if($scope.companies[i].id == companyId) {
+                    return $scope.companies[i];
                 }
             }
-        });
-    };
+        };
 
-    /**
-     * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
-     */
-    $scope.applyTextfilter = function(userFilterText) {
-        $scope.textfilter = userFilterText;
-        //console.log("textfilter: " + $scope.textfilter);
-        if($scope.textfilter != "")
-            $scope.textfilter += "/";
+        $scope.getCompanyById = PraxisboerseService.getCompanyById;
+
+        /**
+         * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu dem ausgewählten Angebot.
+         * @param selectedOffer Angebot zu dem der Popup geöffnet werden soll
+         */
+        $scope.offerPopup = function (selectedOffer) {
+
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'popupTemplate.html',
+                controller: 'PopupInstanceController',
+                size: 'lg',
+                resolve: {
+                    // Argumente an den Controller sind ggf. unnoetig
+                    selectedOffer: function () {
+                        return selectedOffer;
+                    },
+                    getCompanyById: function() {
+                        return $scope.getCompanyById;
+                    }
+                }
+            });
+        };
+
+        /**
+         * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu der ausgewählten Firma.
+         * @param companyId ID der Firma zu welcher der Popup geöffnet werden soll
+         */
+        $scope.companiePopup = function (companyId) {
+            // TODO: atm copy&paste
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'popupTemplate.html',
+                controller: 'PopupInstanceController',
+                size: 'lg',
+                resolve: {
+                    // Argumente an den Controller sind ggf. unnoetig
+                    selectedOffer: function () {
+                        return selectedOffer;
+                    }
+                }
+            });
+        };
+        /**
+         * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
+         */
+        $scope.applyTextfilter = function (userFilterText) {
+            $scope.textfilter = userFilterText;
+            //console.log("textfilter: " + $scope.textfilter);
+            if ($scope.textfilter != "")
+                $scope.textfilter += "/";
 
         $scope.updateSelectedOfferType();
     };
@@ -252,8 +305,7 @@ praxisboerse.controller('PraxisboerseController',
     $scope.updateResults = function() {
         //console.log($scope.selectedOfferType);
 
-        if($scope.checkboxModel.checked && (angular.isUndefined($scope.selectedOfferType) ||  $scope.selectedOfferType == "preselect"))
-        {
+        if($scope.checkboxModel.checked && (angular.isUndefined($scope.selectedOfferType) ||  $scope.selectedOfferType == "preselect")) {
             PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
         }
 
@@ -276,19 +328,19 @@ praxisboerse.controller('PraxisboerseController',
             //}
         }
 
-        if($scope.checkboxModel.checked == false && $scope.selectedOfferType == "preselect")
-        {
-            $scope.offers = '';
-        }
-    };
+            if($scope.checkboxModel.checked == false && $scope.selectedOfferType == "preselect") {
+                $scope.offers = '';
+            }
+        };
 
 }]);
 
 
-praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'selectedOffer',
-    function($scope, $uibModalInstance, selectedOffer) {
+praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'PraxisboerseService', 'selectedOffer',
+    function ($scope, $uibModalInstance, PraxisboerseService, selectedOffer, getCompanyById) {
 
-    $scope.selectedOffer = selectedOffer;
+        $scope.selectedOffer = selectedOffer;
+        $scope.getCompanyById = PraxisboerseService.getCompanyById;
 
     $scope.ok = function () {
         $uibModalInstance.close();

@@ -64,7 +64,18 @@ praxisboerse.controller('PraxisboerseController',
     ['$scope', '$rootScope', 'PraxisboerseService', '$uibModal', function($scope, $rootScope, PraxisboerseService, $uibModal, $log) {
 
     $scope.offerResultsStart = 0;
-    $scope.offerResultsCount = 10;
+    if($rootScope.mobileDevice)
+    {
+        $scope.offerResultsCount = 10;
+        //$scope.offerResultsCount = -1;
+    }
+    else
+    {
+        $scope.offerResultsCount = -1;
+        //$scope.offerResultsCount = 10;
+    }
+
+
     $scope.textfilter = "";
     $scope.checkboxModel = {
         checked : true
@@ -243,7 +254,7 @@ praxisboerse.controller('PraxisboerseController',
 
         if($scope.checkboxModel.checked && (angular.isUndefined($scope.selectedOfferType) ||  $scope.selectedOfferType == "preselect"))
         {
-            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/0/-1");
+            PraxisboerseService.getOffers($rootScope.restURL + "joboffer/notepad/" + $scope.offerResultsStart + "/" + $scope.offerResultsCount);
         }
 
         else if($scope.selectedOfferType != "preselect") {

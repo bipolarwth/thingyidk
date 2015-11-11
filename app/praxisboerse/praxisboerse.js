@@ -18,6 +18,7 @@ praxisboerse.factory('PraxisboerseService', [ '$http', '$base64', '$rootScope', 
      * @returns den REST Respone Body
      */
     server.getData = function(url) {
+        console.log("Request: " + url);
         $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.userCredentials;
         return $http.get(url);
     };
@@ -76,6 +77,7 @@ praxisboerse.controller('PraxisboerseController',
     }
 
     $scope.companies = [];
+    $scope.industrialSectors = [];
     $scope.offerTypes = [];
     $scope.textfilter = "";
     $scope.checkboxModel = {
@@ -137,24 +139,35 @@ praxisboerse.controller('PraxisboerseController',
         });
     };
 
-        /**
-         * Initial die Firmen (zu den companyId's der offers) Daten abholen.
-         */
-        PraxisboerseService.getCompanies = function () {
+    /**
+     * Initial die Firmen (zu den companyId's der offers) Daten abholen.
+     */
+    PraxisboerseService.getCompanies = function () {
 
-            PraxisboerseService.getData($rootScope.restURL + 'joboffer/companies/all').then(function (response) {
-                $scope.companies = response.data;
-            });
+        PraxisboerseService.getData($rootScope.restURL + 'joboffer/companies/all').then(function (response) {
+            $scope.companies = response.data;
+        });
 
-        };
+    };
 
-        /**
-         * Initial die Angebotstypen vom Server abholen
-         */
-        PraxisboerseService.getOfferTypes = function() {
-            //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
-            //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
-            $scope.mobileDevice = $rootScope.mobileDevice;
+    /**
+     * Initial die Branchen (zu den industrialSectorIds's der Companies) Daten abholen.
+     */
+    PraxisboerseService.getIndustrialSectors = function () {
+
+        PraxisboerseService.getData($rootScope.restURL + 'joboffer/industrialsectors/all').then(function (response) {
+            $scope.industrialSectors = response.data;
+        });
+
+    };
+
+    /**
+     * Initial die Angebotstypen vom Server abholen
+     */
+    PraxisboerseService.getOfferTypes = function() {
+        //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
+        //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
+        $scope.mobileDevice = $rootScope.mobileDevice;
 
         PraxisboerseService.getData($scope.url).then(function(response) {
             //console.log("response: " + response.data);
@@ -174,13 +187,9 @@ praxisboerse.controller('PraxisboerseController',
      * @param url
      */
     PraxisboerseService.getOffers = function(url) {
-        //var hskaCredentialCheckUrl = "http://www.iwi.hs-karlsruhe.de/Intranetaccess/REST/credential/check/"
-        //var urlToCheck = hskaCredentialCheckUrl + username + "/" + password;
-
-        console.log("Request: " + url);
 
         PraxisboerseService.getData(url).then(function(response) {
-            console.log("totalHits: " + response.data.totalHits);
+            //console.log("totalHits: " + response.data.totalHits);
             $scope.offers = response.data;
 
             if(url.indexOf("notepad") > -1)
@@ -196,73 +205,99 @@ praxisboerse.controller('PraxisboerseController',
         });
     };
 
-        /**
-         * Durchsucht das companies Array nach der Firma mit der id = companyId. Dies ist mit O(n) derzeit die beste Lösung.
-         * @param companyId ID der Firma dessen Objekt aus dem Array gesucht werden soll.
-         */
-        PraxisboerseService.getCompanyById = function (companyId) {
+    /**
+     * Durchsucht das companies Array nach der Firma mit der id = companyId. Dies ist mit O(n) derzeit die beste Lösung.
+     * @param companyId ID der Firma dessen Objekt aus dem Array gesucht werden soll.
+     */
+    PraxisboerseService.getCompanyById = function (companyId) {
 
-            for(var i = 0; i < $scope.companies.length; i++) {
-                if($scope.companies[i].id == companyId) {
-                    return $scope.companies[i];
+        // Zur verbesserung der Laufzeit kann auch jedes mal ein REST Aufruf an die URL:
+        // $rootscope.restURL + '/joboffer/company/' + companyId
+        // gemacht werden. Das Problem ist das Javascript keinen synchronen (blockierenden) Request
+        // erlaubt, welche hier nötig wäre da der Rückgabetyp von dem offerPopupInstanceController benötigt wird.
+
+        //PraxisboerseService.getData($rootScope.restURL + '/joboffer/company/' + companyId).then(function (response) {
+        //    $scope.company = response.data;
+        //});
+
+
+        for(var i = 0; i < $scope.companies.length; i++) {
+            if($scope.companies[i].id == companyId) {
+                return $scope.companies[i];
+            }
+        }
+    };
+
+    $scope.getCompanyById = PraxisboerseService.getCompanyById;
+
+    /**
+     * Durchsucht das industrialSectors Array nach der Branche mit der id = industrialSectorId.
+     * Dies ist mit O(n) derzeit die beste Lösung, da die REST-Schnittstelle keine ID Suche bietet.
+     * @param industrialSectorId ID der Firma dessen Objekt aus dem Array gesucht werden soll.
+     */
+    PraxisboerseService.getIndustrialSectorById = function (industrialSectorId) {
+
+        for(var i = 0; i < $scope.industrialSectors.length; i++) {
+            if($scope.industrialSectors[i].id == industrialSectorId) {
+                return $scope.industrialSectors[i];
+            }
+        }
+    };
+
+    /**
+     * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu dem ausgewählten Angebot.
+     * @param selectedOffer Angebot zu dem der Popup geöffnet werden soll
+     */
+    $scope.offerPopup = function (selectedOffer) {
+
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'offerPopupTemplate.html',
+            controller: 'PopupInstanceController',
+            size: 'lg',
+            resolve: {
+                popupType: function() {
+                    return 'offer';
+                },
+                arg: function () {
+                    return selectedOffer;
                 }
             }
-        };
+        });
+    };
 
-        $scope.getCompanyById = PraxisboerseService.getCompanyById;
+    /**
+     * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu der ausgewählten Firma.
+     * @param companyId ID der Firma zu welcher der Popup geöffnet werden soll
+     */
+    $scope.companyPopup = function (companyId) {
 
-        /**
-         * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu dem ausgewählten Angebot.
-         * @param selectedOffer Angebot zu dem der Popup geöffnet werden soll
-         */
-        $scope.offerPopup = function (selectedOffer) {
-
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'popupTemplate.html',
-                controller: 'PopupInstanceController',
-                size: 'lg',
-                resolve: {
-                    // Argumente an den Controller sind ggf. unnoetig
-                    selectedOffer: function () {
-                        return selectedOffer;
-                    },
-                    getCompanyById: function() {
-                        return $scope.getCompanyById;
-                    }
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'companyPopupTemplate.html',
+            controller: 'PopupInstanceController',
+            size: 'lg',
+            resolve: {
+                popupType: function() {
+                    return 'company';
+                },
+                arg: function () {
+                    return companyId;
                 }
-            });
-        };
+            }
+        });
+    };
 
-        /**
-         * Öffnet mittels Bootstrap Modal einen Popup mit den Detail Informationen zu der ausgewählten Firma.
-         * @param companyId ID der Firma zu welcher der Popup geöffnet werden soll
-         */
-        $scope.companiePopup = function (companyId) {
-            // TODO: atm copy&paste
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'popupTemplate.html',
-                controller: 'PopupInstanceController',
-                size: 'lg',
-                resolve: {
-                    // Argumente an den Controller sind ggf. unnoetig
-                    selectedOffer: function () {
-                        return selectedOffer;
-                    }
-                }
-            });
-        };
-        /**
-         * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
-         */
-        $scope.applyTextfilter = function (userFilterText) {
-            $scope.textfilter = userFilterText;
-            //console.log("textfilter: " + $scope.textfilter);
-            if ($scope.textfilter != "")
-                $scope.textfilter += "/";
+    /**
+     * Wendet den in die Textbox eingegebenen Text als Filter auf die Ergebnisse an.
+     */
+    $scope.applyTextfilter = function (userFilterText) {
+        $scope.textfilter = userFilterText;
+        //console.log("textfilter: " + $scope.textfilter);
+        if ($scope.textfilter != "")
+            $scope.textfilter += "/";
 
-        $scope.updateSelectedOfferType();
+    $scope.updateSelectedOfferType();
     };
 
     /**
@@ -336,11 +371,19 @@ praxisboerse.controller('PraxisboerseController',
 }]);
 
 
-praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'PraxisboerseService', 'selectedOffer',
-    function ($scope, $uibModalInstance, PraxisboerseService, selectedOffer, getCompanyById) {
+praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'PraxisboerseService', 'popupType', 'arg',
+    function ($scope, $uibModalInstance, PraxisboerseService, popupType, arg) {
 
-        $scope.selectedOffer = selectedOffer;
         $scope.getCompanyById = PraxisboerseService.getCompanyById;
+        if(popupType === 'offer') {
+            $scope.selectedOffer = arg;
+            $scope.company = PraxisboerseService.getCompanyById($scope.selectedOffer.companyId);
+        } else if(popupType === 'company') {
+            $scope.company = PraxisboerseService.getCompanyById(arg);
+            $scope.getIndustrialSectorById = PraxisboerseService.getIndustrialSectorById;
+        } else {
+            console.log("Found unknown popupType: " + popupType);
+        }
 
     $scope.ok = function () {
         $uibModalInstance.close();
@@ -364,12 +407,20 @@ praxisboerse.directive('praxisboerseView', function() {
     };
 });
 
-praxisboerse.directive('popupTemplate', function() {
+praxisboerse.directive('offerPopupTemplate', function() {
    return {
-       templateUrl: 'praxisboerse/popupTemplate.html',
+       templateUrl: 'praxisboerse/offerPopupTemplate.html',
        controller: 'PraxisboerseController',
        replace: true
    };
+});
+
+praxisboerse.directive('companyPopupTemplate', function() {
+    return {
+        templateUrl: 'praxisboerse/companyPopupTemplate.html',
+        controller: 'PraxisboerseController',
+        replace: true
+    };
 });
 
 //praxisboerse.directive('notepadView', function() {

@@ -53,7 +53,7 @@
                             ng-click="updateSelection($event, offer.id)"></td>
                 <!-- Bei Klick auf den Link der Offer wird die Funktion zum öffnen des PopUps mit der offerID als Argument aufgerufen -->
                 <td><a ng-bind="offer.shortDescription" ng-click="offerPopup(offer)"></a></td>
-                <td><a ng-bind="getCompanyById(offer.companyId).companyName" ng-click="companiePopup(offer.companyId)"></a></td>
+                <td><a ng-bind="getCompanyById(offer.companyId).companyName" ng-click="companyPopup(offer.companyId)"></a></td>
                 <td style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>
             </tr>
             </tbody>

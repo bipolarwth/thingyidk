@@ -1,27 +1,27 @@
 <div class="modal">
-    <script type="text/ng-template" id="popupTemplate.html">
+    <script type="text/ng-template" id="offerPopupTemplate.html">
         <div class="model-dialog" role="document">
             <div class="modal-header">
                 <h3 class="modal-title">{{selectedOffer.shortDescription}}</h3>
             </div>
             <div class="modal-body">
 
-                <table style="width: 1%" class="table table-bordered">
+                <table style="width: 1%" class="table table-bordered table-responsive">
                     <tr>
-                        <td><strong>Hinzugefügt</strong></td>
-                        <td >{{selectedOffer.dateAdded | date}}</td>
+                        <td nowrap><strong>Hinzugefügt</strong></td>
+                        <td nowrap>{{selectedOffer.dateAdded | date}}</td>
                     </tr>
                     <tr>
-                        <td><strong>Gültig bis</strong></td>
-                        <td>{{selectedOffer.validDate | date}}</td>
+                        <td nowrap><strong>Gültig bis</strong></td>
+                        <td nowrap>{{selectedOffer.validDate | date}}</td>
                     </tr>
                     <tr>
-                        <td><strong>Firma</strong></td>
-                        <td>{{getCompanyById(selectedOffer.companyId).companyName}}</td>
+                        <td nowrap><strong>Firma</strong></td>
+                        <td nowrap>{{company.companyName}}</td>
                     </tr>
                     <tr>
-                        <td><strong>Ort</strong></td>
-                        <td>{{selectedOffer.usageSite}}</td>
+                        <td nowrap><strong>Ort</strong></td>
+                        <td nowrap>{{selectedOffer.usageSite}}</td>
                     </tr>
                 </table>
 

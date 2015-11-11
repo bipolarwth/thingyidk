@@ -1,0 +1,82 @@
+<div class="modal">
+    <script type="text/ng-template" id="companyPopupTemplate.html">
+        <div class="model-dialog" role="document">
+            <div class="modal-header">
+                <h3 class="modal-title" ng-bind="company.companyName"></h3>
+            </div>
+            <div class="modal-body">
+
+                <table style="width: 1%" class="table table-responsive">
+                    <tr>
+                        <td nowrap><strong>Branchen</strong></td>
+                        <td nowrap>
+                            <li ng-repeat="industrialSector in company.industrialSectorIds">{{getIndustrialSectorById(industrialSector).name}}</li>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td nowrap><strong>Angebote</strong></td>
+                        <td nowrap>{{company.numberOfOffers}}</td>
+                    </tr>
+                    <tr>
+                        <td nowrap><strong>Website</strong></td>
+                        <td nowrap><a href="{{company.website}}" ng-bind="company.website"></a></td>
+                    </tr>
+                    <tr>
+                        <td nowrap><strong>Anschrift</strong></td>
+                        <td nowrap>
+                            <table class="table table-responsive">
+                                <tr>
+                                    <td><strong>Stra&szlig;e</strong></td>
+                                    <td>{{company.street}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PLZ</strong></td>
+                                    <td>{{company.zipCode}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ort</strong></td>
+                                    <td>{{company.city}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Land</strong></td>
+                                    <td>{{company.country}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td nowrap><strong>Kontakt</strong></td>
+                        <td nowrap>
+                            <table class="table table-responsive">
+                                <tr>
+                                    <td><strong>Ansprechpartner</strong></td>
+                                    <td>{{company.contact.formOfAddress}} {{company.contact.firstName}} {{company.contact.secondName}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>E-Mail-Adresse</strong></td>
+                                    <td>{{company.contact.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Telefon</strong></td>
+                                    <td>{{company.contact.telephone}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fax</strong></td>
+                                    <td>{{company.contact.fax}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3>Beschreibung</h3>
+                <p ng-bind="company.description"></p>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
+            </div>
+        </div>
+    </script>
+</div>

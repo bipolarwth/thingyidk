@@ -76,6 +76,7 @@ praxisboerse.controller('PraxisboerseController',
         //$scope.offerResultsCount = 10;
     }
 
+    $scope.map;
     $scope.companies = [];
     $scope.industrialSectors = [];
     $scope.offerTypes = [];
@@ -83,6 +84,13 @@ praxisboerse.controller('PraxisboerseController',
     $scope.checkboxModel = {
         checked : true
     };
+
+    function initMap() {
+        $scope.map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 49.0157639, lng: 8.2691063},
+            zoom: 11
+        });
+    }
 
     var selected = $scope.selected = [];
 

@@ -148,6 +148,18 @@ praxisboerse.controller('PraxisboerseController',
     };
 
     /**
+     * Der folgende Aufruf ermittelt alle möglichen Länder, aus denen Firmen in der Praxisbörse bisher stammen können.
+     */
+    PraxisboerseService.getCountries = function () {
+
+        PraxisboerseService.getData($rootScope.restURL + 'joboffer/countries/all').then(function (response) {
+            $scope.selectedCountry = "preselect";
+            $scope.countries = response.data;
+        });
+
+    };
+
+    /**
      * Initial die Firmen (zu den companyId's der offers) Daten abholen.
      */
     PraxisboerseService.getCompanies = function () {
@@ -198,7 +210,13 @@ praxisboerse.controller('PraxisboerseController',
 
         PraxisboerseService.getData(url).then(function(response) {
             //console.log("totalHits: " + response.data.totalHits);
+
             $scope.offers = response.data;
+
+            if (angular.isDefined($scope.selectedCountry) &&  $scope.selectedCountry != "preselect")
+            {
+                $scope.offers.offers
+            }
 
             if(url.indexOf("notepad") > -1)
             {

@@ -24,6 +24,7 @@ mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'Praxis
   $scope.login = function() {
     $rootScope.userCredentials = $base64.encode($scope.user.name + ':' + $scope.user.password);
     PraxisboerseService.getCompanies();
+    PraxisboerseService.getCountries();
     PraxisboerseService.getIndustrialSectors();
     PraxisboerseService.getOfferTypes();
   };

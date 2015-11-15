@@ -20,6 +20,14 @@
 
         <br>
 
+        <label>Land ausw&auml;hlen: </label>
+        <select name="countrySelect" ng-model="selectedCountry" ng-change="updateSelectedOfferType()">
+            <option value="preselect" selected><-- Land ausw&auml;hlen --></option>
+            <option ng-repeat="country in countries" value="{{country.id}}">{{country.name}}</option>
+        </select>
+
+        <br>
+
         <label>Suchfilter: </label>
         <input type="text" name="textfilter" id="textfilter" ng-model="userFilterText"/>
         <button ng-click="applyTextfilter(userFilterText)">&Uuml;bernehmen</button>
@@ -47,14 +55,15 @@
             </thead>
             <tbody>
             <tr ng-repeat="offer in offers.offers">
+
                 <!--<td> <input type="checkbox" checklist-model="offer" checklist-value="offer.id" ng-change="putOnNotepad(offer.id)"></td>-->
-                <td> <input type="checkbox" name="selected"
+                <td ng-if="selectedCountry == 'preselect' || (selectedCountry != 'preselect' && offer.countryId == selectedCountry)"> <input type="checkbox" name="selected"
                             ng-checked="isSelected(offer.id)"
                             ng-click="updateSelection($event, offer.id)"></td>
                 <!-- Bei Klick auf den Link der Offer wird die Funktion zum öffnen des PopUps mit der offerID als Argument aufgerufen -->
-                <td><a ng-bind="offer.shortDescription" ng-click="offerPopup(offer)"></a></td>
-                <td><a ng-bind="getCompanyById(offer.companyId).companyName" ng-click="companyPopup(offer.companyId)"></a></td>
-                <td style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>
+                <td ng-if="selectedCountry == 'preselect' || (selectedCountry != 'preselect' && offer.countryId == selectedCountry)"><a ng-bind="offer.shortDescription" ng-click="offerPopup(offer)"></a></td>
+                <td ng-if="selectedCountry == 'preselect' || (selectedCountry != 'preselect' && offer.countryId == selectedCountry)"><a ng-bind="getCompanyById(offer.companyId).companyName" ng-click="companyPopup(offer.companyId)"></a></td>
+                <td ng-if="selectedCountry == 'preselect' || (selectedCountry != 'preselect' && offer.countryId == selectedCountry)" style="text-align: right;" ng-bind-template="{{offer.validDate | date}}"></td>
             </tr>
             </tbody>
         </table>

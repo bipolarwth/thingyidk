@@ -41,8 +41,6 @@ mainApp.controller('MainController', ['$base64', '$scope', '$rootScope', 'Praxis
 
   $scope.mobileCheck();
 
-
-
   // Aufruf der Aktualisierungsfunktion im PraxisboerseController
   //$scope.refresh = function() {
   //  //$scope.$broadcast('incrementDate');

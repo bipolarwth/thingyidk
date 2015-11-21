@@ -76,7 +76,6 @@ praxisboerse.controller('PraxisboerseController',
         //$scope.offerResultsCount = 10;
     }
 
-    $scope.map;
     $scope.companies = [];
     $scope.industrialSectors = [];
     $scope.offerTypes = [];
@@ -84,13 +83,6 @@ praxisboerse.controller('PraxisboerseController',
     $scope.checkboxModel = {
         checked : true
     };
-
-    function initMap() {
-        $scope.map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 49.0157639, lng: 8.2691063},
-            zoom: 11
-        });
-    }
 
     var selected = $scope.selected = [];
 
@@ -397,9 +389,10 @@ praxisboerse.controller('PraxisboerseController',
 }]);
 
 
-praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance', 'PraxisboerseService', 'popupType', 'arg',
-    function ($scope, $uibModalInstance, PraxisboerseService, popupType, arg) {
+praxisboerse.controller('PopupInstanceController', ['$scope', '$rootScope', '$uibModalInstance', 'PraxisboerseService', 'popupType', 'arg',
+    function ($scope, $rootScope, $uibModalInstance, PraxisboerseService, popupType, arg) {
 
+        $scope.mobileDevice = $rootScope.mobileDevice;
         $scope.getCompanyById = PraxisboerseService.getCompanyById;
         if(popupType === 'offer') {
             $scope.selectedOffer = arg;
@@ -407,9 +400,31 @@ praxisboerse.controller('PopupInstanceController', ['$scope', '$uibModalInstance
         } else if(popupType === 'company') {
             $scope.company = PraxisboerseService.getCompanyById(arg);
             $scope.getIndustrialSectorById = PraxisboerseService.getIndustrialSectorById;
+            $scope.companyAddress = $scope.company.street + ', ' + $scope.company.zipCode + ', ' + $scope.company.city + ', ' + $scope.company.country;
         } else {
             console.log("Found unknown popupType: " + popupType);
         }
+
+    $scope.initMap = function(companyAddress) {
+        if($rootScope.mobileDevice == false) {
+            $scope.map = new google.maps.Map(document.getElementById('map-canvas'), {
+                zoom: 15
+            });
+            $scope.geocoder = new google.maps.Geocoder();
+            $scope.geocoder.geocode( {'address' : companyAddress}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    $scope.map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: $scope.map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+        }
+
+    };
 
     $scope.ok = function () {
         $uibModalInstance.close();

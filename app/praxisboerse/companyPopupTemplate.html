@@ -2,9 +2,11 @@
     <script type="text/ng-template" id="companyPopupTemplate.html">
         <div class="model-dialog" role="document">
             <div class="modal-header">
-                <h3 class="modal-title" ng-bind="company.companyName"></h3>
+                <h1 class="modal-title" ng-bind="company.companyName"></h1>
             </div>
             <div class="modal-body">
+
+                <h3>&Uuml;bersicht</h3>
 
                 <table style="width: 1%" class="table table-responsive">
                     <tr>
@@ -72,8 +74,11 @@
                 <h3>Beschreibung</h3>
                 <p ng-bind="company.description"></p>
 
-                <h3>Standort</h3>
-                <div id="map"></div>
+                <div ng-hide="mobileDevice">
+                    <h3>Standort</h3>
+                    <div id="map-canvas" style="width: 100%; padding-bottom: 100%;" ng-bind="initMap(companyAddress)">
+                    </div>
+                </div>
 
             </div>
             <div class="modal-footer">

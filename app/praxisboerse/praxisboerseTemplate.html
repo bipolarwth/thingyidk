@@ -6,9 +6,9 @@
     <div style="margin-left: 5px; margin-right: 5px;">
 
         <h2>Praxisb&ouml;rse</h2>
-        <br>
-        <label>Mobile Device:</label>
-        <label ng-bind="mobileDevice"></label>
+        <!--<br>-->
+        <!--<label>Mobile Device:</label>-->
+        <!--<label ng-bind="mobileDevice"></label>-->
 
         <br>
 
@@ -70,9 +70,9 @@
 
         <div class="paging" ng-show="mobileDevice">
             <button class="btn btn-default" ng-hide="offerResultsStart == 0" ng-click="decrementOfferResultsStart()">&lt;&lt; Previous</button>
-            <label ng-bind="offers.offers.length"></label>
-            <label ng-bind="offers.totalHits"></label>
-            <label ng-bind="offers.totalHits - offerResultsStart"></label>
+            <!--<label ng-bind="offers.offers.length"></label>-->
+            <!--<label ng-bind="offers.totalHits"></label>-->
+            <!--<label ng-bind="offers.totalHits - offerResultsStart"></label>-->
             <button class="btn btn-default" ng-hide="(offers.totalHits - offerResultsStart) <= offerResultsCount" ng-click="incrementOfferResultsStart()">Next &gt;&gt;</button>
         </div>
     </div>
